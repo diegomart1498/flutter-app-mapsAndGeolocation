@@ -7,8 +7,7 @@ class PlacesInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.queryParameters.addAll({
-      'country': 'co',
-      'limit': 7,
+      // 'country': 'co',
       'language': 'es',
       'access_token': accessToKen,
     });

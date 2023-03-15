@@ -5,13 +5,13 @@ import 'dart:convert';
 class PlacesResponse {
   PlacesResponse({
     required this.type,
-    required this.query,
+    // required this.query,
     required this.features,
     required this.attribution,
   });
 
   final String type;
-  final List<String> query;
+  // final List<String> query;
   final List<Feature> features;
   final String attribution;
 
@@ -22,7 +22,7 @@ class PlacesResponse {
 
   factory PlacesResponse.fromJson(Map<String, dynamic> json) => PlacesResponse(
         type: json["type"],
-        query: List<String>.from(json["query"].map((x) => x)),
+        // query: List<String>.from(json["query"].map((x) => x)),
         features: List<Feature>.from(
             json["features"].map((x) => Feature.fromJson(x))),
         attribution: json["attribution"],
@@ -30,7 +30,7 @@ class PlacesResponse {
 
   Map<String, dynamic> toJson() => {
         "type": type,
-        "query": List<dynamic>.from(query.map((x) => x)),
+        // "query": List<dynamic>.from(query.map((x) => x)),
         "features": List<dynamic>.from(features.map((x) => x.toJson())),
         "attribution": attribution,
       };
@@ -49,7 +49,7 @@ class Feature {
     required this.placeName,
     required this.center,
     required this.geometry,
-    required this.context,
+    // required this.context,
     // this.languageEs,
     // this.language,
     this.matchingText,
@@ -67,7 +67,7 @@ class Feature {
   final String placeName;
   final List<double> center;
   final Geometry geometry;
-  final List<Context> context;
+  // final List<Context> context;
   // final Language? languageEs;
   // final Language? language;
   final String? matchingText;
@@ -89,8 +89,8 @@ class Feature {
         placeName: json["place_name"],
         center: List<double>.from(json["center"].map((x) => x?.toDouble())),
         geometry: Geometry.fromJson(json["geometry"]),
-        context:
-            List<Context>.from(json["context"].map((x) => Context.fromJson(x))),
+        // context:
+        //     List<Context>.from(json["context"].map((x) => Context.fromJson(x))),
         // languageEs: languageValues.map[json["language_es"]],
         // language: languageValues.map[json["language"]],
         matchingText: json["matching_text"],
@@ -109,7 +109,7 @@ class Feature {
         "place_name": placeName,
         "center": List<dynamic>.from(center.map((x) => x)),
         "geometry": geometry.toJson(),
-        "context": List<dynamic>.from(context.map((x) => x.toJson())),
+        // "context": List<dynamic>.from(context.map((x) => x.toJson())),
         // "language_es": languageValues.reverse[languageEs],
         // "language": languageValues.reverse[language],
         "matching_text": matchingText,

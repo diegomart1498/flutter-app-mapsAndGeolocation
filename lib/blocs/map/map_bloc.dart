@@ -7,6 +7,7 @@ import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:maps_app/blocs/blocs.dart';
+import 'package:maps_app/helpers/helpers.dart';
 import 'package:maps_app/models/models.dart';
 import 'package:maps_app/themes/themes.dart';
 
@@ -48,7 +49,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     });
 
     on<OnDisplayPolylinesEvent>((event, emit) {
-      emit(state.copyWith(polylines: event.polylines));
+      emit(state.copyWith(polylines: event.polylines, markers: event.markers));
     });
   }
 
@@ -82,9 +83,41 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       endCap: Cap.roundCap,
       points: destination.points,
     );
+
+    double kms = (((destination.distance / 1000) * 100).floorToDouble() / 100);
+    kms = ((kms * 10).floorToDouble()) / 10;
+    int tripDuration = (destination.duration / 60).floorToDouble().toInt();
+
+    // Custom Markers
+    // final startMarkerIcon = await getAssetImageMarker();
+    // final endMarketIcon = await getNetworkImageMarker();
+    final startMarkerIcon =
+        await getStartCustomMarker(tripDuration, 'Punto de partida');
+    final endMarketIcon =
+        await getEndCustomMarker(kms, destination.endPlace.text);
+
+    final startMarker = Marker(
+      markerId: const MarkerId('start'),
+      position: destination.points.first,
+      anchor: const Offset(0.05, 1),
+      // icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      icon: startMarkerIcon,
+    );
+    final endMarker = Marker(
+      markerId: const MarkerId('end'),
+      position: destination.points.last,
+      icon: endMarketIcon,
+    );
+
     final currentPolylines = Map<String, Polyline>.from(state.polylines);
+    final currentMarkers = Map<String, Marker>.from(state.markers);
     currentPolylines['route'] = myRoute;
-    add(OnDisplayPolylinesEvent(currentPolylines));
+    currentMarkers['start'] = startMarker;
+    currentMarkers['end'] = endMarker;
+
+    add(OnDisplayPolylinesEvent(currentPolylines, currentMarkers));
+    await Future.delayed(const Duration(milliseconds: 300));
+    _mapController?.showMarkerInfoWindow(const MarkerId('end'));
   }
 
   void moveCamera(LatLng newLocation) {
